@@ -1,40 +1,44 @@
 flowchart TB
 
-subgraph Client
-  C1[Customer App\nReactJS]
-  C2[Driver App\nReactJS]
-  C3[Admin Dashboard\nReactJS]
+subgraph Client_Layer[Client Layer]
+  C1[Customer App
+ReactJS]
+  C2[Driver App
+ReactJS]
+  C3[Admin Dashboard
+ReactJS]
 end
 
-subgraph Gateway
-  G[API Gateway\nNodeJS]
+subgraph Gateway[API Gateway]
+  G[API Gateway
+NodeJS]
 end
 
-subgraph Microservices
-  A[Auth]
-  U[User]
-  D[Driver]
-  B[Booking]
-  P[Pricing]
-  R[Ride]
-  Pay[Payment]
-  N[Notification]
-  Rev[Review]
+subgraph Microservices[Microservices Layer]
+  A[Auth Service]
+  U[User Service]
+  D[Driver Service]
+  B[Booking Service]
+  P[Pricing Service]
+  R[Ride Service]
+  Pay[Payment Service]
+  N[Notification Service]
+  Rev[Review Service]
 end
 
-subgraph Broker
+subgraph Broker[Message Broker]
   K[Kafka / RabbitMQ]
 end
 
-subgraph Data
+subgraph Data[Data Layer]
   PG[(PostgreSQL)]
   MG[(MongoDB)]
   RD[(Redis)]
 end
 
-C1 --> G
-C2 --> G
-C3 --> G
+C1 -->|HTTPS / WS| G
+C2 -->|HTTPS / WS| G
+C3 -->|HTTPS| G
 
 G --> A
 G --> U
@@ -46,9 +50,9 @@ G --> Pay
 G --> N
 G --> Rev
 
-B --> K
-R --> K
-Pay --> K
+B -->|RideCreated| K
+R -->|RideStatusChanged| K
+Pay -->|PaymentSuccess| K
 
 A --> PG
 U --> PG
